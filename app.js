@@ -1,16 +1,26 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
-app.get('/', function(req, res){
- res.sendFile(__dirname + '/index.html');
-});
-io.on('connection', function(socket){
- socket.on('chat message', function(msg){
- io.emit('chat message', msg);
- });
-});
-http.listen(port, function(){
- console.log('listening on ' + port);
-});
+var builder = require('botbuilder');
+
+var connector = new builder.ConsoleConnector().listen();
+var bot = new builder.UniversalBot(connector);
+bot.dialog('/', [
+    function (session, args, next) {
+        if (!session.userData.name) {
+            session.beginDialog('/profile');
+        } else {
+            next();
+        }
+    },
+    function (session, results) {
+        session.send('Hello %s!', session.userData.name);
+    }
+]);
+
+bot.dialog('/profile', [
+    function (session) {
+        builder.Prompts.text(session, 'Hi! What is your name?');
+    },
+    function (session, results) {
+        session.userData.name = results.response;
+        session.endDialog();
+    }
+]);
