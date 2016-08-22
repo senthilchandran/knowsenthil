@@ -2,7 +2,7 @@
   "name": "knowsenthil",
   "version": "1.0.0",
   "description": "know senthil node js bot",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "test"
   },
