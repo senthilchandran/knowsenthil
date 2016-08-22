@@ -1,11 +1,22 @@
 var builder = require('botbuilder');
 var restify = require('restify');
+/*
+bot.dialog('/', function (session) { 
+    session.send("You said " + session.message.text);
+});
+*/
 
+//=========================================================
+// Bot Setup
+//=========================================================
+
+// Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
-
+  
+// Create chat bot
 var connector = new builder.ChatConnector({
     appId: process.env.KNOW_SENTHIL_APP_ID,
     appPassword: process.env.KNOW_SENTHIL_APP_PASSWORD
@@ -13,37 +24,13 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
-bot.dialog('/', function (session) { 
-    //respond with user's message
-    session.send("You said " + session.message.text);
-});
-
-//=========================================================
-// Bot Setup
-//=========================================================
-
-// Setup Restify Server
-//var server = restify.createServer();
-//server.listen(process.env.port || process.env.PORT || 3978, function () {
-//   console.log('%s listening to %s', server.name, server.url); 
-//});
-  
-// Create chat bot
-//var connector = new builder.ChatConnector({
-//    appId: process.env.KNOW_SENTHIL_APP_ID,
-//    appPassword: process.env.KNOW_SENTHIL_APP_PASSWORD
-//});
-
-//var bot = new builder.UniversalBot(connector);
-//server.post('/api/messages', connector.listen());
-
 //=========================================================
 // Bots Dialogs
 //=========================================================
 
-//var intents = new builder.IntentDialog();
-//bot.dialog('/', intents);
-/*
+var intents = new builder.IntentDialog();
+bot.dialog('/', intents);
+
 intents.matches(/^change name/i, [
     function (session) {
         session.beginDialog('/profile');
@@ -75,4 +62,3 @@ bot.dialog('/profile', [
         session.endDialog();
     }
 ]);
-*/
