@@ -1,20 +1,15 @@
 var builder = require('botbuilder');
 var restify = require('restify');
-/*
-bot.dialog('/', function (session) { 
-    session.send("You said " + session.message.text);
-});
-*/
-
-//=========================================================
-// Bot Setup
-//=========================================================
 
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
    console.log('%s listening to %s', server.name, server.url); 
 });
+server.get(/.*/, restify.serveStatic({
+	'directory': '.',
+	'default': 'index.html'
+}));
   
 // Create chat bot
 var connector = new builder.ChatConnector({
@@ -24,10 +19,7 @@ var connector = new builder.ChatConnector({
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
-//=========================================================
 // Bots Dialogs
-//=========================================================
-
 var intents = new builder.IntentDialog();
 bot.dialog('/', intents);
 
